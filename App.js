@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
+import {  } from "react-native-web";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 import ButtonC from "./components/ButtonC";
 import CardC from "./components/CardC";
@@ -7,6 +9,7 @@ import Play from "./components/Play";
 
 export default function App() {
   const [number, setNumber] = useState("");
+  const [start, setStart] = useState(false);
 
   const numberChangeHandler = (value) => {
     setNumber(value);
@@ -16,31 +19,41 @@ export default function App() {
     setNumber("");
   };
 
+  const startChangeHandler = () => {
+    return setStart((prevState) => !prevState);
+  }
+
+  let gameStarted = number != "" && start;
+  let parentContainerStyle = gameStarted ? 'play' : 'container';
+
   return (
-    <View style={styles.play}>
-      {number != "" ? (
+      <View style={styles[parentContainerStyle]}>
+      {gameStarted ? (
         <Play number={number} />
       ) : (
-        <CardC>
-          <TextInput
-            style={styles.textInput}
-            keyboardType="numeric"
-            maxLength={2}
-            onChangeText={numberChangeHandler}
-            value={number}
-          />
-          <View style={styles.buttonContainer}>
-            <ButtonC
-              title={"reset"}
-              objectStyle={{ width: "45%", color: "#660033" }}
-              onPress={resetPressHandler}
+        <Pressable style={styles.pressable}>
+          <CardC>
+            <TextInput accessibilityState={{selected: false}}
+              style={styles.textInput}
+              keyboardType="numeric"
+              maxLength={2}
+              onChangeText={numberChangeHandler}
+              value={number}
             />
-            <ButtonC
-              title={"start"}
-              objectStyle={{ width: "45%", color: "#660033" }}
-            />
-          </View>
-        </CardC>
+            <View style={styles.buttonContainer}>
+              <ButtonC
+                title={"reset"}
+                objectStyle={{ width: "45%", color: "#660033" }}
+                onPress={resetPressHandler}
+              />
+              <ButtonC
+                title={"start"}
+                objectStyle={{ width: "45%", color: "#660033" }}
+                onPress={startChangeHandler}
+              />
+            </View>
+          </CardC>
+        </Pressable>
       )}
     </View>
   );
@@ -49,8 +62,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -64,6 +75,7 @@ const styles = StyleSheet.create({
     width: "15%",
     fontSize: 22,
     textAlign: "center",
+    color: "#FFC300",
   },
   play: {
     flex: 1,
@@ -71,4 +83,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: "15%",
   },
+  pressable: {
+    flex: 1,  alignItems: "center", justifyContent: "center"
+  }
 });
