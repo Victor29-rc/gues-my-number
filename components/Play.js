@@ -1,33 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import CardC from "./CardC";
 import ButtonC from "./ButtonC";
+import NumberList from "./NumberList";
 
 const Play = (props) => {
-
-  const [randNum, setRandNum] = useState(0);
+  const [numberItems, setNumberItems] = useState([]);
+  const [randNum, setRandNum] = useState(Math.floor(Math.random() * 99));
 
   const generateRandomHandler = () => {
+    setRandNum((prevNumber) => {
+      const max = prevNumber >= props.number ? prevNumber : props.number;
+      const min = prevNumber <= props.number ? prevNumber : props.number;
 
-    const max = randNum > props.number ? randNum : props.number;
-    const min = randNum < props.number ? randNum : props.number;
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    });
+  };
 
-    setRandNum(
-      Math.floor(Math.random() * max)
-    );
-  }
+  useEffect(() => {
+    setNumberItems([...numberItems, randNum]);
+    console.log(randNum);
+  }, [randNum]);
 
   return (
-    <CardC width="80%" height="35%" y="flex-end">
-      <CardC bgColor="#581845">
-        <Text style={styles.text}>{props.number}</Text>
+    <>
+      <CardC width="80%" height="35%" y="flex-end">
+        <CardC bgColor="#581845">
+          <Text style={styles.text}>{props.number}</Text>
+        </CardC>
+        <View style={styles.inputContainer}>
+          {numberItems.length > 0 ? (
+            <>
+              <ButtonC
+                title="+"
+                objectStyle={{ width: "45%", color: "#900C3F" }}
+                onPress={generateRandomHandler}
+              />
+              <ButtonC
+                title="-"
+                objectStyle={{ width: "45%", color: "#581845" }}
+                onPress={generateRandomHandler}
+              />
+            </>
+          ) : (
+            <ButtonC
+              title="Start"
+              objectStyle={{ width: "100%", color: "#581845" }}
+            />
+          )}
+        </View>
       </CardC>
-      <View style={styles.inputContainer}>
-       {/*  <ButtonC title="+" objectStyle={{ width: "45%", color: "#900C3F" }} />
-        <ButtonC title="-" objectStyle={{ width: "45%", color: "#581845" }} /> */}
-        <ButtonC title="Start" objectStyle={{ width: "100%", color: "#581845" }} />
-      </View>
-    </CardC>
+      <NumberList items={numberItems} />
+    </>
   );
 };
 

@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
-import {  } from "react-native-web";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import { StyleSheet, TextInput, View, Pressable } from "react-native";
 
 import ButtonC from "./components/ButtonC";
 import CardC from "./components/CardC";
@@ -21,19 +19,20 @@ export default function App() {
 
   const startChangeHandler = () => {
     return setStart((prevState) => !prevState);
-  }
+  };
 
   let gameStarted = number != "" && start;
-  let parentContainerStyle = gameStarted ? 'play' : 'container';
+  let parentContainerStyle = gameStarted ? "play" : "container";
 
   return (
-      <View style={styles[parentContainerStyle]}>
+    <View style={styles[parentContainerStyle]}>
       {gameStarted ? (
         <Play number={number} />
       ) : (
         <Pressable style={styles.pressable}>
           <CardC>
-            <TextInput accessibilityState={{selected: false}}
+            <TextInput
+              accessibilityState={{ selected: false }}
               style={styles.textInput}
               keyboardType="numeric"
               maxLength={2}
@@ -84,6 +83,8 @@ const styles = StyleSheet.create({
     marginTop: "15%",
   },
   pressable: {
-    flex: 1,  alignItems: "center", justifyContent: "center"
-  }
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
